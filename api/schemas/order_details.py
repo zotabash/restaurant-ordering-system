@@ -40,30 +40,29 @@ def read_one(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
+from typing import Optional
+from pydantic import BaseModel
 
 
-def update(db: Session, item_id, request):
-    try:
-        item = db.query(model.OrderDetail).filter(model.OrderDetail.id == item_id)
-        if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
-        update_data = request.dict(exclude_unset=True)
-        item.update(update_data, synchronize_session=False)
-        db.commit()
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return item.first()
+class OrderDetailBase(BaseModel):
+    amount: int
 
 
-def delete(db: Session, item_id):
-    try:
-        item = db.query(model.OrderDetail).filter(model.OrderDetail.id == item_id)
-        if not item.first():
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
-        item.delete(synchronize_session=False)
-        db.commit()
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+class OrderDetailCreate(OrderDetailBase):
+    order_id: int
+    sandwich_id: int
+
+
+class OrderDetailUpdate(BaseModel):
+    order_id: Optional[int] = None
+    sandwich_id: Optional[int] = None
+    amount: Optional[int] = None
+
+
+class OrderDetail(OrderDetailBase):
+    id: int
+    order_id: int
+    sandwich_id: int
+
+    class Config:
+        from_attributes = True
