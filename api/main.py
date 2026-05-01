@@ -9,7 +9,6 @@ app = FastAPI()
 # Create tables
 index()
 
-# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,5 +17,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load routes
 load_routes(app)

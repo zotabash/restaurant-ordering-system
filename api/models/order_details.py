@@ -1,17 +1,40 @@
-from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
 
 
 class OrderDetail(Base):
+
     __tablename__ = "order_details"
 
-    id = Column(Integer, primary_key=True, index=True)
+    order_item_id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
 
-    order_id = Column(Integer, ForeignKey("orders.id"))
-    sandwich_id = Column(Integer, ForeignKey("sandwiches.id"))
+    order_id = Column(
+        Integer,
+        ForeignKey("orders.order_id")
+    )
 
-    amount = Column(Integer, nullable=False)
+    menu_item_id = Column(
+        Integer,
+        ForeignKey("menu_items.menu_item_id")
+    )
 
-    sandwich = relationship("Sandwich", back_populates="order_details")
-    order = relationship("Order", back_populates="order_details")
+    quantity = Column(
+        Integer,
+        nullable=False
+    )
+
+    order = relationship(
+        "Order",
+        back_populates="order_details"
+    )
+
+    sandwich = relationship(
+        "Sandwich",
+        back_populates="order_details"
+    )

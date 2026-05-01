@@ -1,10 +1,8 @@
-from api.dependencies.database import Base, engine
-
 from .orders import Order
 from .order_details import OrderDetail
-from .sandwiches import Sandwich
-from .recipes import Recipe
-from .resources import Resource
+from .sandwiches import Sandwich   # ← ADD THIS
+
+from ..dependencies.database import Base, engine
 
 
 def index():

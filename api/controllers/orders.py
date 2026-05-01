@@ -63,7 +63,7 @@ def update(db: Session, item_id, request):
 
 def delete(db: Session, item_id):
     item = db.query(model.Order).filter(
-        model.Order.id == item_id
+        model.Order.order_id
     )
 
     if not item.first():

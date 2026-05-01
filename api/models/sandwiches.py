@@ -1,24 +1,27 @@
-from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, DECIMAL
+from sqlalchemy.orm import relationship
+from ..dependencies.database import Base
 
 
-class SandwichBase(BaseModel):
-    sandwich_name: str
-    price: float
+class Sandwich(Base):
 
+    __tablename__ = "menu_items"
 
-class SandwichCreate(SandwichBase):
-    pass
+    menu_item_id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
+    name = Column(String(100))
 
-class SandwichUpdate(BaseModel):
-    sandwich_name: Optional[str] = None
-    price: Optional[float] = None
+    price = Column(DECIMAL(10, 2))
 
+    calories = Column(Integer)
 
-class Sandwich(SandwichBase):
-    id: int
+    category = Column(String(50))
 
-    class ConfigDict:
-        from_attributes = True
+    order_details = relationship(
+        "OrderDetail",
+        back_populates="sandwich"
+    )
