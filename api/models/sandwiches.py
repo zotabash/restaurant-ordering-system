@@ -25,3 +25,7 @@ class Sandwich(Base):
         "OrderDetail",
         back_populates="sandwich"
     )
+    reviews = relationship(
+        "Review",
+        back_populates="menu_item"
+    )
