@@ -41,5 +41,10 @@ class Order(Base):
         "OrderDetail",
         back_populates="order"
     )
-    payments = relationship("Payment", back_populates="order")
-    reviews = relationship("Review", back_populates="order")
+    payments = relationship(
+        "Payment",
+        back_populates="order"
+    )
+    reviews = relationship(
+        "Review", back_populates="order"
+    )
