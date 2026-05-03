@@ -6,8 +6,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 def create(db: Session, request):
     new_item = model.Order(
-        customer_name=request.customer_name,
-        description=request.description
+        customer_id=request.customer_id,
+        order_date=request.order_date,
+        tracking_number=request.tracking_number,
+        status=request.status,
+        total_price=request.total_price,
+        promo_id=request.promo_id
     )
 
     try:
@@ -44,7 +48,7 @@ def read_one(db: Session, item_id):
 
 def update(db: Session, item_id, request):
     item = db.query(model.Order).filter(
-        model.Order.id == item_id
+        model.Order.order_id == item_id
     )
 
     if not item.first():
@@ -62,17 +66,18 @@ def update(db: Session, item_id, request):
 
 
 def delete(db: Session, item_id):
-    item = db.query(model.Order).filter(
-        model.Order.order_id
-    )
 
-    if not item.first():
+    item = db.query(model.Order).filter(
+        model.Order.order_id == item_id   # ✅ MUST be order_id
+    ).first()
+
+    if not item:
         raise HTTPException(
             status_code=404,
             detail="Id not found!"
         )
 
-    item.delete()
+    db.delete(item)
     db.commit()
 
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return {"message": "Deleted successfully"}
